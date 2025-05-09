@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "ejercicio2.h"
 
+#define SECTORES 5 
+#define IMPRESORAS 10 
+
 int main() {
     int opcion, sector, nro, estado, paginas;
 

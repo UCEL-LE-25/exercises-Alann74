@@ -7,8 +7,6 @@
 int main() {
     int opcion, sector, nro, estado, paginas;
 
-    inicializarImpresoras();
-
     do {
         mostrarMenu();
         printf("Seleccione una opción: ");

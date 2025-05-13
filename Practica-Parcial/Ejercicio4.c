@@ -34,7 +34,7 @@ int main() {
     }
 
     mostrarMenu();
-
+//
     int costoTotal = (2 * tabla.precio) + (4 * clavo.precio) + (1 * soga.precio);
 
     if (oro >= costoTotal) {

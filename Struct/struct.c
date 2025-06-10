@@ -1,19 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 
-#define MAX_ESTUDIANTES 100 // Máximo número de estudiantes
-
 struct Alumno {
     char nombre[50];
     int edad;
     float nota;
 };
 
-struct Alumno estudiantes[MAX_ESTUDIANTES]; // Arreglo para almacenar estudiantes
+struct Alumno estudiantes[100]; // Arreglo para almacenar estudiantes
 int totalEstudiantes = 0; // Contador para ver cuántos alumnos se han agregado
 
 void agregarAlumno() {
-    if (totalEstudiantes >= MAX_ESTUDIANTES) {
+    if (totalEstudiantes >= 100) {
         printf("No se pueden agregar más estudiantes. Límite alcanzado.\n");
         return;
     }

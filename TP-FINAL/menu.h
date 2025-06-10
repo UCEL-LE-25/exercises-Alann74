@@ -3,5 +3,7 @@
 
 void menuAdmin();
 void menuPrincipal();
+int login();
+void cleanScreen();
 
 #endif

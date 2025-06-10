@@ -1,11 +1,19 @@
 #include "auto.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
 Auto autos[FILAS][COLUMNAS];
 int proximoID = 10;
 
+void cleanScreen() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
 
 int archivoExiste(const char *nombreArchivo) {
     struct stat buffer;
@@ -40,8 +48,10 @@ void guardarAutosEnArchivo() {
         for (int i = 0; i < FILAS; i++) {
             for (int j = 0; j < COLUMNAS; j++) {
                 Auto a = autos[i][j];
-                fprintf(f, "%d,%s,%s,%d,%.2f,%s,%d\n",
-                        a.id, a.marca, a.modelo, a.anio, a.precio, a.descripcion, a.disponible);
+                if (a.id != 0) {
+                    fprintf(f, "%d,%s,%s,%d,%.2f,%s,%d\n",
+                            a.id, a.marca, a.modelo, a.anio, a.precio, a.descripcion, a.disponible);
+                }
             }
         }
         fclose(f);
@@ -59,15 +69,35 @@ void guardarAutoEnArchivo(Auto *a) {
 
 void cargarAutosDesdeArchivo() {
     FILE *f = fopen(ARCHIVO_AUTOS, "r");
+    int i = 0, j = 0;
+    int maxID = 0;
     if (f != NULL) {
-        for (int i = 0; i < FILAS; i++) {
-            for (int j = 0; j < COLUMNAS; j++) {
-                Auto *a = &autos[i][j];
-                fscanf(f, "%d,%19[^,],%19[^,],%d,%f,%99[^,],%d\n",
-                       &a->id, a->marca, a->modelo, &a->anio, &a->precio, a->descripcion, &a->disponible);
+        char linea[256];
+        while (fgets(linea, sizeof(linea), f) && i < FILAS) {
+            if (strlen(linea) < 5) continue;
+            Auto *a = &autos[i][j];
+            int r = sscanf(linea, "%d,%19[^,],%19[^,],%d,%f,%99[^,],%d",
+                &a->id, a->marca, a->modelo, &a->anio, &a->precio, a->descripcion, &a->disponible);
+            if (r == 7) {
+                if (a->id > maxID) maxID = a->id;
+                j++;
+                if (j == COLUMNAS) { j = 0; i++; }
             }
         }
+        for (; i < FILAS; i++) {
+            for (; j < COLUMNAS; j++) {
+                autos[i][j].disponible = 0;
+                autos[i][j].id = 0;
+                autos[i][j].marca[0] = '\0';
+                autos[i][j].modelo[0] = '\0';
+                autos[i][j].anio = 0;
+                autos[i][j].precio = 0;
+                autos[i][j].descripcion[0] = '\0';
+            }
+            j = 0;
+        }
         fclose(f);
+        proximoID = maxID + 1;
     }
 }
 
@@ -104,47 +134,34 @@ void mostrarDetallesPorID() {
                        autos[i][j].disponible ? "Disponible" : "Reservado");
                 printf("=====================================\n");
                 encontrado = 1;
+                if (autos[i][j].disponible) {
+                    char reservar;
+                    printf("\nDesea reservar este vehiculo? (s/n): ");
+                    scanf(" %c", &reservar);
+                    if (reservar == 's' || reservar == 'S') {
+                        reservarAutoPorID(id);
+                    }
+                }
             }
         }
     }
     if (!encontrado) {
         printf("No se encontro un vehiculo con ese ID.\n");
-    } else {
-        char reservar;
-        if (autos[id / COLUMNAS][id % COLUMNAS].disponible) {
-            printf("\nDesea reservar este vehiculo? (s/n): ");
-            scanf(" %c", &reservar);
-            if (reservar == 's' || reservar == 'S') {
-                reservarAutoPorID(id);
-            }
-        }
     }
 }
 
 void listarAutos() {
     printf("======= LISTADO DE AUTOS =======\n");
-    int hayDisponibles = 0;
     for (int i = 0; i < FILAS; i++) {
         for (int j = 0; j < COLUMNAS; j++) {
             Auto a = autos[i][j];
-            if (a.disponible) {
-                printf("ID: %d | %s %s | Anio: %d | Precio: $%.2f\n", 
-                       a.id, a.marca, a.modelo, a.anio, a.precio);
-                hayDisponibles = 1;
+            if (a.id != 0) {
+                printf("ID: %d | Marca: %s | Modelo: %s | Año: %d | Precio: $%.2f | Descripción: %s | Estado: %s\n",
+                       a.id, a.marca, a.modelo, a.anio, a.precio, a.descripcion, a.disponible ? "Disponible" : "Reservado");
             }
         }
     }
-    if (!hayDisponibles) {
-        printf("No hay autos disponibles.\n");
-    }
     printf("================================\n");
-
-    char verMas;
-    printf("\nDesea ver detalles de algun vehiculo? (s/n): ");
-    scanf(" %c", &verMas);
-    if (verMas == 's' || verMas == 'S') {
-        mostrarDetallesPorID();
-    }
 }
 
 void altaAuto() {
@@ -186,7 +203,13 @@ void bajaAuto() {
     for (int i = 0; i < FILAS && !encontrado; i++) {
         for (int j = 0; j < COLUMNAS && !encontrado; j++) {
             if (autos[i][j].id == id && autos[i][j].disponible) {
+                autos[i][j].id = 0;
                 autos[i][j].disponible = 0;
+                autos[i][j].marca[0] = '\0';
+                autos[i][j].modelo[0] = '\0';
+                autos[i][j].anio = 0;
+                autos[i][j].precio = 0;
+                autos[i][j].descripcion[0] = '\0';
                 guardarAutosEnArchivo();
                 printf("Auto eliminado correctamente.\n");
                 encontrado = 1;
@@ -237,27 +260,21 @@ void busquedaFiltrada() {
     int cantidadResultados = 0;
     cleanScreen();
     printf("Busqueda filtrada paso a paso\n");
-    printf("================================\n");
-    printf("Marcas disponibles: ");
+    printf("==============================\n");
+
+    // Mostrar todos los autos registrados (struct completo)
+    printf("Autos registrados:\n");
     for (int i = 0; i < FILAS; i++) {
         for (int j = 0; j < COLUMNAS; j++) {
-            if (autos[i][j].disponible) {
-                int yaMostrada = 0;
-                for (int k = 0; k < i * COLUMNAS + j; k++) {
-                    int fila = k / COLUMNAS;
-                    int col = k % COLUMNAS;
-                    if (autos[fila][col].disponible && strcmp(autos[fila][col].marca, autos[i][j].marca) == 0) {
-                        yaMostrada = 1;
-                        break;
-                    }
-                }
-                if (!yaMostrada) {
-                    printf("%s ", autos[i][j].marca);
-                }
+            Auto a = autos[i][j];
+            if (a.id != 0) {
+                printf("ID: %d | Marca: %s | Modelo: %s | Año: %d | Precio: $%.2f | Descripción: %s | Estado: %s\n",
+                       a.id, a.marca, a.modelo, a.anio, a.precio, a.descripcion, a.disponible ? "Disponible" : "Reservado");
             }
         }
     }
     printf("\n");
+
     printf("Ingrese marca (deje vacio para no filtrar): ");
     getchar();
     fgets(marca, sizeof(marca), stdin);
@@ -297,6 +314,30 @@ void busquedaFiltrada() {
     printf("\nDesea ver detalles de algun vehiculo? (s/n): ");
     scanf(" %c", &verMas);
     if (verMas == 's' || verMas == 'S') {
-        mostrarDetallesPorID();
+        int id, encontrado = 0;
+        printf("Ingrese el ID del auto para ver detalles: ");
+        scanf("%d", &id);
+        for (int i = 0; i < FILAS && !encontrado; i++) {
+            for (int j = 0; j < COLUMNAS && !encontrado; j++) {
+                if (autos[i][j].disponible && autos[i][j].id == id) {
+                    printf("\n======= DETALLES DEL VEHICULO =======\n");
+                    printf("ID: %d\nMarca: %s\nModelo: %s\nAnio: %d\nPrecio: $%.2f\nDescripcion: %s\nEstado: %s\n",
+                        autos[i][j].id, autos[i][j].marca, autos[i][j].modelo,
+                        autos[i][j].anio, autos[i][j].precio, autos[i][j].descripcion,
+                        autos[i][j].disponible ? "Disponible" : "Reservado");
+                    printf("=====================================\n");
+                    encontrado = 1;
+                    char reservar;
+                    printf("\nDesea reservar este vehiculo? (s/n): ");
+                    scanf(" %c", &reservar);
+                    if (reservar == 's' || reservar == 'S') {
+                        reservarAutoPorID(id);
+                    }
+                }
+            }
+        }
+        if (!encontrado) {
+            printf("ID no valido.\n");
+        }
     }
 }

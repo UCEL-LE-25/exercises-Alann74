@@ -23,7 +23,6 @@ void inicializarAutosPorDefecto();
 void guardarAutosEnArchivo();
 void guardarAutoEnArchivo(Auto *a);
 void cargarAutosDesdeArchivo();
-void cleanScreen();
 void reservarAutoPorID(int id);
 void mostrarDetallesPorID();
 void listarAutos();
@@ -31,5 +30,6 @@ void altaAuto();
 void bajaAuto();
 void modificarAuto();
 void busquedaFiltrada();
+void cleanScreen();
 
 #endif

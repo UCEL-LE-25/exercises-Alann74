@@ -4,8 +4,6 @@
 
 #define USERNAME "admin"
 #define PASSWORD "admin123"
-#define ARCHIVO_AUTOS "autos.txt"
-
 
 int login() {
     char usuario[20], contrasena[20];

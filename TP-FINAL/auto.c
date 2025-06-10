@@ -235,9 +235,29 @@ void busquedaFiltrada() {
     int anioMin = 0;
     float precioMax = 0;
     int cantidadResultados = 0;
-
+    cleanScreen();
     printf("Busqueda filtrada paso a paso\n");
-
+    printf("================================\n");
+    printf("Marcas disponibles: ");
+    for (int i = 0; i < FILAS; i++) {
+        for (int j = 0; j < COLUMNAS; j++) {
+            if (autos[i][j].disponible) {
+                int yaMostrada = 0;
+                for (int k = 0; k < i * COLUMNAS + j; k++) {
+                    int fila = k / COLUMNAS;
+                    int col = k % COLUMNAS;
+                    if (autos[fila][col].disponible && strcmp(autos[fila][col].marca, autos[i][j].marca) == 0) {
+                        yaMostrada = 1;
+                        break;
+                    }
+                }
+                if (!yaMostrada) {
+                    printf("%s ", autos[i][j].marca);
+                }
+            }
+        }
+    }
+    printf("\n");
     printf("Ingrese marca (deje vacio para no filtrar): ");
     getchar();
     fgets(marca, sizeof(marca), stdin);

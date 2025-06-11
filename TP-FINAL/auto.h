@@ -18,7 +18,6 @@ typedef struct {
 extern Auto autos[FILAS][COLUMNAS];
 extern int proximoID;
 
-int archivoExiste(const char *nombreArchivo);
 void inicializarAutosPorDefecto();
 void guardarAutosEnArchivo();
 void guardarAutoEnArchivo(Auto *a);
@@ -30,6 +29,6 @@ void altaAuto();
 void bajaAuto();
 void modificarAuto();
 void busquedaFiltrada();
-void cleanScreen();
+
 
 #endif

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "auto.h"
+#include "utils.h"
 
 #define USERNAME "admin"
 #define PASSWORD "admin123"
@@ -62,11 +63,11 @@ void menuPrincipal() {
     int opcion;
     do {
         cleanScreen();
-        printf("======= MENU PRINCIPAL =======\n");
+        printf("\033[0;32m======= MENU PRINCIPAL =======\n");
         printf("1. Mostrar todos los vehiculos\n");
         printf("2. Busqueda filtrada paso a paso\n");
         printf("3. Login administrador\n");
-        printf("0. Salir\n");
+        printf("0. Salir \033[0m\n");
         printf("Seleccione una opcion: ");
         scanf("%d", &opcion);
 

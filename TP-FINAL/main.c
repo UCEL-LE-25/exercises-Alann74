@@ -1,5 +1,6 @@
 #include "auto.h"
 #include "menu.h"
+#include "utils.h"
 
 int main() {
     if (archivoExiste(ARCHIVO_AUTOS)) {

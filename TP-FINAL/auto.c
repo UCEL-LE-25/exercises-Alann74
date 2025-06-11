@@ -3,22 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <unistd.h> // Para getcwd()
+#include "utils.h"
 
 Auto autos[FILAS][COLUMNAS];
 int proximoID = 10;
-
-void cleanScreen() {
-#ifdef _WIN32
-    system("cls");
-#else
-    system("clear");
-#endif
-}
-
-int archivoExiste(const char *nombreArchivo) {
-    struct stat buffer;
-    return (stat(nombreArchivo, &buffer) == 0);
-}
 
 void inicializarAutosPorDefecto() {
     Auto autosPorDefecto[FILAS][COLUMNAS] = {

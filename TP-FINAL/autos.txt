@@ -1,0 +1,9 @@
+1,Toyota,Corolla,2020,20000.00,Nafta, 45000 km, Motor 1.8L,1
+2,Ford,Focus,2018,18000.00,Diesel, 60000 km, Motor 2.0L,1
+3,Chevrolet,Onix,2019,17000.00,GNC, 30000 km, Motor 1.4L,1
+4,Honda,Civic,2021,22000.00,Diesel, 20000 km, Motor 2.0L,1
+5,Volkswagen,Golf,2017,16000.00,GNC, 70000 km, Motor 1.6L,1
+6,Renault,Clio,2016,14000.00,Nafta, 80000 km, Motor 1.2L,1
+7,Peugeot,208,2022,21000.00,GNC, 10000 km, Motor 1.6L,1
+8,Fiat,Cronos,2020,15000.00,Nafta, 25000 km, Motor 1.3L,1
+9,Nissan,Versa,2019,17500.00,Diesel, 40000 km, Motor 1.6L,1

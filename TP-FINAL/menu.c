@@ -35,12 +35,12 @@ void menuAdmin() {
     int opcion;
     do {
         cleanScreen();
-        printf("======= MENU ADMINISTRADOR =======\n");
+        printf("\033[0;36m======= MENU ADMINISTRADOR =======\n");
         printf("1. Alta de auto\n");
         printf("2. Baja de auto\n");
         printf("3. Modificar auto\n");
         printf("4. Listar autos\n");
-        printf("0. Volver al menu principal\n");
+        printf("0. Volver al menu principal\033[0m\n");
         printf("Seleccione una opcion: ");
         scanf("%d", &opcion);
 

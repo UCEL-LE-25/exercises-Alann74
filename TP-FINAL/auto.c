@@ -303,7 +303,7 @@ void busquedaFiltrada() {
     scanf(" %c", &verMas);
     if (verMas == 's' || verMas == 'S') {
         int id, encontrado = 0;
-        printf("Ingrese el ID del auto para ver detalles: ");
+        printf("\033[0;36mIngrese el ID del auto para ver detalles: \033[0m");
         scanf("%d", &id);
         for (int i = 0; i < FILAS && !encontrado; i++) {
             for (int j = 0; j < COLUMNAS && !encontrado; j++) {

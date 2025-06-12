@@ -12,6 +12,8 @@ int login() {
 
     while (intentos > 0) {
         cleanScreen();
+        printf("\033[0;35mINICIAR SESION ADMINISTRADOR\n");
+        printf("============================\033[0m\n");
         printf("Usuario: ");
         scanf("%s", usuario);
         printf("Contrasena: ");

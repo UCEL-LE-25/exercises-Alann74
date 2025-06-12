@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <windows.h> 
 #include "auto.h"
 #include "utils.h"
 
@@ -18,7 +19,9 @@ int login() {
         scanf("%s", usuario);
         printf("Contrasena: ");
         scanf("%s", contrasena);
-
+        printf("\nVerificando credenciales...\n");
+        Sleep(2000);
+        for (volatile long i = 0; i < 200000000; ++i); // Espera simulada
         if (strcmp(usuario, USERNAME) == 0 && strcmp(contrasena, PASSWORD) == 0) {
             printf("\nBienvenido, administrador.\n\n");
             return 1;
@@ -51,7 +54,7 @@ void menuAdmin() {
             case 2: bajaAuto(); break;
             case 3: modificarAuto(); break;
             case 4: listarAutos(); break;
-            case 0: printf("Volviendo al menu principal...\n"); break;
+            case 0: printf("\nVolviendo al menu principal...\n"); break;
             default: printf("Opcion invalida.\n");
         }
         if (opcion != 0) {

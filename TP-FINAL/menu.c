@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <windows.h> 
+#include <windows.h> // Para Sleep en Windows (espera simulada)
 #include "auto.h"
 #include "utils.h"
 
@@ -21,7 +21,7 @@ int login() {
         scanf("%s", contrasena);
         printf("\nVerificando credenciales...\n");
         Sleep(2000);
-        for (volatile long i = 0; i < 200000000; ++i); // Espera simulada
+        for (volatile long i = 0; i < 200000000; ++i); // Espera simulada.
         if (strcmp(usuario, USERNAME) == 0 && strcmp(contrasena, PASSWORD) == 0) {
             printf("\nBienvenido, administrador.\n\n");
             return 1;
